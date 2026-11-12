@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this code or these result tables, please cite the paper and the archived release."
+title: "velocity-reliability-map: analysis code for A Reliability Map for Per-Gene Multiome RNA Velocity Parameters in Single-Cell Kinetics"
+type: software
+license: MIT
+version: ml4h2026-camera-ready
+repository-code: "https://github.com/biospin/velocity-reliability-map"
+authors:
+  - given-names: Ka-Kyung
+    family-names: Kim
+    affiliation: "Pseudo Lab"
+  - given-names: Jaemyun
+    family-names: Lyu
+    affiliation: "Genolution Inc.; Dankook University"
+  - given-names: Geongyu
+    family-names: Lee
+    affiliation: "Pseudo Lab; Omixai Co., Ltd."
+  - given-names: Sejin
+    family-names: Park
+    affiliation: "Seegene Inc."
+  - given-names: Yong Gi
+    family-names: Ji
+    affiliation: "Qaumtum c&s"
+preferred-citation:
+  type: conference-paper
+  title: "A Reliability Map for Per-Gene Multiome RNA Velocity Parameters in Single-Cell Kinetics"
+  collection-title: "Machine Learning for Health (ML4H) 2026, Findings Track"
+  year: 2026
+  url: "https://openreview.net/forum?id=eGy4QuhHdP"
+  authors:
+    - given-names: Ka-Kyung
+      family-names: Kim
+    - given-names: Jaemyun
+      family-names: Lyu
+    - given-names: Geongyu
+      family-names: Lee
+    - given-names: Sejin
+      family-names: Park
+    - given-names: Yong Gi
+      family-names: Ji

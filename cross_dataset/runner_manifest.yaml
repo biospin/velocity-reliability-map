@@ -1,0 +1,59 @@
+# runner_manifest.yaml — internal 워커 계층 계약 (P2 fit → P3 채점)
+#
+# 이 파일은 흩어진 runner 실행 규약(env·GPU·출력·필수컬럼)을 한 곳에 선언한다.
+# 트리거(automation/codex/사람)가 무엇이든 이 계약은 불변이다 — "누가 실행하나"가 아니라
+# "어느 runner를 어떤 env로, 무엇을 산출하는가"만 정의한다. (설계: ORCHESTRATION-WIRING-DESIGN.md §2)
+#
+# 상태(2026-08-04 리더 결정): 직렬화 형식=YAML, 트리거=codex 확정(§5). PyYAML 6.0.1 repo에 존재.
+# 검증기: cross_dataset/verify_manifest_resolution.py (커밋 1c53932 — 멱등성·누락감지·required_cols 계약 3검사).
+#   실행 래퍼: cross_dataset/run_from_manifest.sh (codex가 트리거, --dry-run으로 stage 해소 검증 가능).
+# CPU 검증: gse205117 실 산출물로 전 stage 해소(멱등 SKIP)·required_cols 계약 일치(위반 0) 통과.
+#   byte-identical scorecard 재생성만 numpy env(scv-preprocess) 필요 → author 서버 몫.
+
+version: 1
+
+defaults:
+  cwd: scripts                         # 모든 runner는 scripts/에서 실행
+  suffix_env: CROSS_DATASET_SUFFIX     # 예: _gse205117 → 파일명 접미사
+  config_env: CROSS_DATASET_CONFIG     # 예: ../cross_dataset/config_gse205117.py
+  outputs_dir: results
+  runtime_log: results/runtime.csv
+
+stages:                                # P2 fit 산출 (선언 순서 = 의존성 순서)
+  - id: floor
+    runner: p2_rna_only.py
+    env: scv-preprocess
+    gpu: false
+    output: rna_only_dynamical_genes{suffix}.csv
+    required_cols: [gene, fit_alpha, fit_likelihood]
+  - id: multivelo
+    runner: p2_multivelo.py
+    env: velo-mv
+    gpu: false
+    output: multivelo_genes{suffix}.csv
+    required_cols: [gene, fit_alpha, fit_t_sw1, fit_t_sw2, fit_likelihood]
+  - id: dl_prep
+    runner: p2_dl_prep.py
+    env: velo-torch
+    gpu: true
+    produces_input_for: [multivelovae, moflow]   # 산출 CSV 없음(중간 substrate)
+  - id: multivelovae
+    runner: p2_multivelovae.py
+    env: velo-torch
+    gpu: true
+    output: multivelovae_genes{suffix}.csv
+    required_cols: [gene, vae_alpha, vae_alpha_c]
+  - id: moflow                         # 사전등록 예측5(원정의 MV×MoFlow)에 필수 — internal 교훈
+    runner: p2_moflow.py
+    env: velo-torch
+    gpu: true
+    output: moflow_genes{suffix}.csv
+    required_cols: [gene, cs_lag_median]          # cs_lag(오타) 아님 — internal 조용한 폴백 사고 방지
+
+score:                                 # P3 채점 (fit 위에서, CPU)
+  - id: prereg
+    runner: cross_dataset/p3_prereg_gse205117.py   # dataset별 채점기 (parametric 통합은 별건)
+    cwd: .                               # score는 ROOT에서 실행 (fit=scripts와 위치 다름; docstring L11·run_gse205117_fits.sh:72 규약)
+    env: scv-preprocess
+    gpu: false
+    output: prereg{suffix}_scorecard.md

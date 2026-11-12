@@ -1,0 +1,17 @@
+{
+  "title": "velocity-reliability-map: analysis code and result tables for \"A Reliability Map for Per-Gene Multiome RNA Velocity Parameters in Single-Cell Kinetics\" (ML4H 2026)",
+  "upload_type": "software",
+  "description": "Analysis scripts, per-gene result tables, MultiVelo refit tables, measured-rate reference tables, sealed preregistration and environment files for the ML4H 2026 Findings paper \"A Reliability Map for Per-Gene Multiome RNA Velocity Parameters in Single-Cell Kinetics\". Every number in the paper is produced by a script in this archive.",
+  "creators": [
+    {"name": "Kim, Ka-Kyung", "affiliation": "Pseudo Lab"},
+    {"name": "Lyu, Jaemyun", "affiliation": "Genolution Inc.; Dankook University"},
+    {"name": "Lee, Geongyu", "affiliation": "Pseudo Lab; Omixai Co., Ltd."},
+    {"name": "Park, Sejin", "affiliation": "Seegene Inc."},
+    {"name": "Ji, Yong Gi", "affiliation": "Qaumtum c&s"}
+  ],
+  "license": "MIT",
+  "keywords": ["RNA velocity", "single-cell multiome", "parameter identifiability", "reproducibility"],
+  "related_identifiers": [
+    {"identifier": "https://openreview.net/forum?id=eGy4QuhHdP", "relation": "isSupplementTo", "resource_type": "publication-conferencepaper"}
+  ]
+}
